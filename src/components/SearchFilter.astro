@@ -1,0 +1,270 @@
+---
+import type { CategoryMeta } from '../types/repo';
+
+interface Props {
+  categories: CategoryMeta[];
+  totalRepos: number;
+}
+
+const { categories, totalRepos } = Astro.props;
+---
+
+<div class="sticky top-16 z-40 w-full bg-[#07090e]/90 backdrop-blur-xl border-b border-white/[0.08] py-4 transition-all duration-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3.5">
+    <!-- Top Search Row -->
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <!-- Search Input Container -->
+      <div class="relative flex-1 max-w-2xl">
+        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search 40+ learning guides (e.g. React, Docker, Postgres, Signals, NestJS)..."
+          class="w-full pl-10 pr-24 py-2.5 bg-[#0e1424] border border-white/[0.1] focus:border-cyan-500/60 rounded-xl text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 transition-all shadow-inner"
+          autocomplete="off"
+        />
+
+        <div class="absolute inset-y-0 right-0 pr-3 flex items-center gap-1.5 pointer-events-none">
+          <kbd class="hidden sm:inline-block px-2 py-0.5 text-[10px] font-mono text-slate-400 bg-white/[0.06] border border-white/[0.1] rounded">
+            /
+          </kbd>
+          <button
+            type="button"
+            id="clear-search"
+            class="hidden pointer-events-auto p-1 text-slate-400 hover:text-white"
+            aria-label="Clear search"
+          >
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Level Filter Dropdown / Group -->
+      <div class="flex items-center gap-2 self-end sm:self-auto text-xs">
+        <span class="text-slate-400 hidden lg:inline">Level:</span>
+        <div class="flex items-center bg-[#0e1424] border border-white/[0.08] rounded-xl p-0.5" id="level-filters">
+          <button
+            type="button"
+            class="level-btn active px-2.5 py-1 rounded-lg text-xs font-medium text-white bg-cyan-500/20 border border-cyan-500/30 transition-all"
+            data-level="all"
+          >
+            All
+          </button>
+          <button
+            type="button"
+            class="level-btn px-2.5 py-1 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all"
+            data-level="Beginner"
+          >
+            Beginner
+          </button>
+          <button
+            type="button"
+            class="level-btn px-2.5 py-1 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all"
+            data-level="Intermediate"
+          >
+            Intermediate
+          </button>
+          <button
+            type="button"
+            class="level-btn px-2.5 py-1 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all"
+            data-level="Advanced"
+          >
+            Advanced
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Category Chips Row -->
+    <div class="flex items-center justify-between gap-3 overflow-x-auto pb-1 scrollbar-none" id="category-filters">
+      <div class="flex items-center gap-2 flex-nowrap">
+        <button
+          type="button"
+          class="cat-chip active text-xs font-medium px-3 py-1.5 rounded-xl whitespace-nowrap bg-white/[0.12] text-white border border-white/[0.15] transition-all"
+          data-category="all"
+        >
+          All Domains
+        </button>
+        {categories.map(cat => (
+          <button
+            type="button"
+            class="cat-chip text-xs font-medium px-3 py-1.5 rounded-xl whitespace-nowrap bg-white/[0.03] text-slate-400 hover:text-slate-200 border border-white/[0.06] hover:border-white/[0.12] transition-all"
+            data-category={cat.id}
+          >
+            {cat.name.split('&')[0].trim()}
+          </button>
+        ))}
+      </div>
+
+      <!-- Live Counter -->
+      <div class="text-xs text-slate-400 whitespace-nowrap hidden sm:block">
+        Showing <span id="results-count" class="font-mono text-cyan-400 font-semibold">{totalRepos}</span> of {totalRepos}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function setupSearchAndFilter() {
+    const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
+    const clearSearch = document.getElementById('clear-search');
+    const resultsCount = document.getElementById('results-count');
+    const catChips = document.querySelectorAll<HTMLButtonElement>('.cat-chip');
+    const levelBtns = document.querySelectorAll<HTMLButtonElement>('.level-btn');
+    const repoCards = document.querySelectorAll<HTMLElement>('.repo-card');
+    const categorySections = document.querySelectorAll<HTMLElement>('.category-section');
+    const emptyState = document.getElementById('no-results-state');
+
+    let currentQuery = '';
+    let selectedCategory = 'all';
+    let selectedLevel = 'all';
+
+    function filterCards() {
+      let visibleCount = 0;
+      const sectionCounts: Record<string, number> = {};
+
+      categorySections.forEach(sec => {
+        const catId = sec.getAttribute('data-category-section') || '';
+        sectionCounts[catId] = 0;
+      });
+
+      repoCards.forEach(card => {
+        const title = card.getAttribute('data-title') || '';
+        const name = card.getAttribute('data-name') || '';
+        const desc = card.getAttribute('data-desc') || '';
+        const tags = card.getAttribute('data-tags') || '';
+        const category = card.getAttribute('data-category') || '';
+        const level = card.getAttribute('data-level') || '';
+
+        const matchesQuery =
+          !currentQuery ||
+          title.includes(currentQuery) ||
+          name.includes(currentQuery) ||
+          desc.includes(currentQuery) ||
+          tags.includes(currentQuery);
+
+        const matchesCategory =
+          selectedCategory === 'all' || category === selectedCategory;
+
+        const matchesLevel =
+          selectedLevel === 'all' || level === selectedLevel;
+
+        const isVisible = matchesQuery && matchesCategory && matchesLevel;
+
+        if (isVisible) {
+          card.style.display = 'flex';
+          visibleCount++;
+          if (sectionCounts[category] !== undefined) {
+            sectionCounts[category]++;
+          }
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Update category section visibility and counts
+      categorySections.forEach(sec => {
+        const catId = sec.getAttribute('data-category-section') || '';
+        const count = sectionCounts[catId] || 0;
+        const countBadge = sec.querySelector('.category-count');
+        if (countBadge) {
+          countBadge.textContent = `${count} Guides`;
+        }
+
+        if (count === 0) {
+          sec.style.display = 'none';
+        } else {
+          sec.style.display = 'block';
+        }
+      });
+
+      // Update live counter
+      if (resultsCount) {
+        resultsCount.textContent = String(visibleCount);
+      }
+
+      // Toggle empty state
+      if (emptyState) {
+        emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+      }
+    }
+
+    // Search input handler
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        currentQuery = (e.target as HTMLInputElement).value.toLowerCase().trim();
+        if (clearSearch) {
+          clearSearch.style.display = currentQuery ? 'block' : 'none';
+        }
+        filterCards();
+      });
+
+      // Quick shortcut "/" to focus search
+      window.addEventListener('keydown', (e) => {
+        if (e.key === '/' && document.activeElement !== searchInput) {
+          e.preventDefault();
+          searchInput.focus();
+        } else if (e.key === 'Escape' && document.activeElement === searchInput) {
+          searchInput.value = '';
+          currentQuery = '';
+          if (clearSearch) clearSearch.style.display = 'none';
+          filterCards();
+          searchInput.blur();
+        }
+      });
+    }
+
+    // Clear search
+    if (clearSearch && searchInput) {
+      clearSearch.addEventListener('click', () => {
+        searchInput.value = '';
+        currentQuery = '';
+        clearSearch.style.display = 'none';
+        filterCards();
+        searchInput.focus();
+      });
+    }
+
+    // Category chips
+    catChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        catChips.forEach(c => {
+          c.classList.remove('active', 'bg-white/[0.12]', 'text-white', 'border-white/[0.15]');
+          c.classList.add('bg-white/[0.03]', 'text-slate-400', 'border-white/[0.06]');
+        });
+        chip.classList.add('active', 'bg-white/[0.12]', 'text-white', 'border-white/[0.15]');
+        chip.classList.remove('bg-white/[0.03]', 'text-slate-400', 'border-white/[0.06]');
+
+        selectedCategory = chip.getAttribute('data-category') || 'all';
+        filterCards();
+      });
+    });
+
+    // Level buttons
+    levelBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        levelBtns.forEach(b => {
+          b.classList.remove('active', 'text-white', 'bg-cyan-500/20', 'border', 'border-cyan-500/30');
+          b.classList.add('text-slate-400');
+        });
+        btn.classList.add('active', 'text-white', 'bg-cyan-500/20', 'border', 'border-cyan-500/30');
+        btn.classList.remove('text-slate-400');
+
+        selectedLevel = btn.getAttribute('data-level') || 'all';
+        filterCards();
+      });
+    });
+  }
+
+  // Setup on page load and Astro page swaps
+  document.addEventListener('DOMContentLoaded', setupSearchAndFilter);
+</script>

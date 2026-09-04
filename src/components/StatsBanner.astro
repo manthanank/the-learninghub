@@ -1,0 +1,65 @@
+---
+interface Props {
+  totalGuides: number;
+  totalCategories: number;
+  totalTechnologies: number;
+}
+
+const {
+  totalGuides = 42,
+  totalCategories = 6,
+  totalTechnologies = 50
+} = Astro.props;
+
+const stats = [
+  {
+    label: 'Curated Guides',
+    value: `${totalGuides}+`,
+    sub: 'Full-stack & systems',
+    gradient: 'from-cyan-400 to-blue-500',
+    icon: 'book'
+  },
+  {
+    label: 'Tech Domains',
+    value: `${totalCategories}`,
+    sub: 'Frontend to DevOps',
+    gradient: 'from-purple-400 to-indigo-500',
+    icon: 'layers'
+  },
+  {
+    label: 'Tags & Concepts',
+    value: `${totalTechnologies}+`,
+    sub: 'Modern frameworks & tools',
+    gradient: 'from-emerald-400 to-teal-500',
+    icon: 'tag'
+  },
+  {
+    label: 'Open Source',
+    value: '100%',
+    sub: 'Free on GitHub',
+    gradient: 'from-amber-400 to-orange-500',
+    icon: 'code'
+  }
+];
+---
+
+<section class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+    {stats.map(item => (
+      <div class="relative overflow-hidden rounded-2xl bg-white/[0.03] border border-white/[0.06] p-5 hover:border-white/[0.12] transition-all duration-300 group">
+        <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-gradient-to-br from-white/[0.03] to-transparent rounded-full blur-xl group-hover:scale-125 transition-transform duration-500"></div>
+        <div class="relative z-10 flex flex-col">
+          <span class={`text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r ${item.gradient} bg-clip-text text-transparent font-mono`}>
+            {item.value}
+          </span>
+          <span class="text-sm font-semibold text-slate-200 mt-1">
+            {item.label}
+          </span>
+          <span class="text-xs text-slate-400 mt-0.5">
+            {item.sub}
+          </span>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

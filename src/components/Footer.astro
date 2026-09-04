@@ -1,0 +1,56 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="w-full border-t border-white/[0.08] bg-[#07090e] py-12 mt-auto">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+    <!-- Brand Info -->
+    <div class="flex flex-col items-center md:items-start gap-1 text-center md:text-left">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-white tracking-tight">The LearningHub</span>
+        <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+          Open Source
+        </span>
+      </div>
+      <p class="text-xs text-slate-400 max-w-sm">
+        Curated developer roadmaps, code references, and hands-on guides created by{' '}
+        <a href="https://github.com/manthanank" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline">
+          Manthanank
+        </a>.
+      </p>
+    </div>
+
+    <!-- Tech Stack Badge & Links -->
+    <div class="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-400">
+      <a
+        href="https://github.com/manthanank/the-learninghub"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hover:text-cyan-400 transition-colors"
+      >
+        Source Code
+      </a>
+      <span class="text-slate-600">•</span>
+      <a
+        href="https://github.com/manthanank"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hover:text-cyan-400 transition-colors"
+      >
+        GitHub Profile
+      </a>
+      <span class="text-slate-600">•</span>
+      <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.06] text-[11px]">
+        <span>Powered by</span>
+        <span class="font-semibold text-slate-200">Astro</span>
+        <span>+</span>
+        <span class="font-semibold text-slate-200">Tailwind</span>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="text-xs text-slate-400 font-mono text-center md:text-right">
+      © {currentYear} Manthanank. MIT Licensed.
+    </div>
+  </div>
+</footer>
