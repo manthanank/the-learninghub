@@ -1,48 +1,129 @@
 ---
 import '../styles/global.css';
+import type { LearningRepo } from '../types/repo';
 
 interface Props {
   title?: string;
   description?: string;
   image?: string;
+  repos?: LearningRepo[];
 }
 
 const {
-  title = 'The LearningHub | Comprehensive Developer Guides & Learning Roadmaps',
+  title = 'The LearningHub | 40+ Developer Guides & Tech Stacks',
   description = 'Explore 40+ curated learning repositories and tech roadmaps created by Manthanank across Frontend, Backend, DevOps, Databases, and System Design.',
-  image = '/og-image.png'
+  image = '/og-image.png',
+  repos = []
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://the-learninghub.vercel.app');
+const siteUrl = 'https://the-learninghub.vercel.app';
+const canonicalURL = new URL(Astro.url.pathname, siteUrl).href;
+const ogImageURL = new URL(image, siteUrl).href;
+
+// JSON-LD Structured Data schemas
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'The LearningHub',
+  url: siteUrl,
+  description: description,
+  author: {
+    '@type': 'Person',
+    name: 'Manthanank',
+    url: 'https://github.com/manthanank'
+  },
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${siteUrl}/?q={search_term_string}`,
+    'query-input': 'required name=search_term_string'
+  }
+};
+
+const authorSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Manthanank',
+  url: 'https://github.com/manthanank',
+  sameAs: [
+    'https://github.com/manthanank',
+    'https://twitter.com/manthanank'
+  ],
+  jobTitle: 'Software Engineer & Fullstack Developer'
+};
+
+const collectionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: title,
+  description: description,
+  url: canonicalURL,
+  mainEntity: {
+    '@type': 'ItemList',
+    numberOfItems: repos.length,
+    itemListElement: repos.slice(0, 30).map((repo, idx) => ({
+      '@type': 'ListItem',
+      position: idx + 1,
+      item: {
+        '@type': 'SoftwareSourceCode',
+        name: repo.title,
+        description: repo.description,
+        codeRepository: repo.githubUrl,
+        programmingLanguage: repo.tags.join(', ')
+      }
+    }))
+  }
+};
 ---
 
 <!doctype html>
 <html lang="en" class="dark scroll-smooth">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
 
     <!-- Primary Meta Tags -->
     <title>{title}</title>
     <meta name="title" content={title} />
     <meta name="description" content={description} />
+    <meta name="keywords" content="developer guides, coding roadmaps, fullstack development, learn reactjs, learn angular, learn nextjs, learn typescript, learn docker, learn kubernetes, learn nodejs, learn postgresql, learn system design, learn python, open source developer resources" />
+    <meta name="author" content="Manthanank" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="theme-color" content="#07090e" />
+    <meta name="color-scheme" content="dark" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="The LearningHub" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={image} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The LearningHub - 40+ Developer Guides & Roadmaps" />
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={canonicalURL} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={image} />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@manthanank" />
+    <meta name="twitter:creator" content="@manthanank" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+    <meta name="twitter:image:alt" content="The LearningHub - 40+ Developer Guides & Roadmaps" />
+
+    <!-- Structured Data JSON-LD for Search Engines -->
+    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(authorSchema)} />
+    {repos.length > 0 && (
+      <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
+    )}
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -54,10 +135,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://the-lear
   </head>
   <body class="min-h-screen bg-[#07090e] text-slate-100 antialiased selection:bg-cyan-500/20 selection:text-cyan-300 relative overflow-x-hidden">
     <!-- Ambient Background Radial Blurs -->
-    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-cyan-500/10 via-indigo-500/10 to-transparent blur-3xl opacity-70 rounded-full"></div>
-      <div class="absolute top-[30%] -left-48 w-96 h-96 bg-purple-500/10 blur-[120px] rounded-full"></div>
-      <div class="absolute top-[60%] -right-48 w-96 h-96 bg-emerald-500/10 blur-[120px] rounded-full"></div>
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+      <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[90vw] max-w-[1000px] h-[500px] bg-gradient-to-b from-cyan-500/10 via-indigo-500/10 to-transparent blur-3xl opacity-70 rounded-full"></div>
+      <div class="absolute top-[30%] -left-32 sm:-left-48 w-64 sm:w-96 h-64 sm:h-96 bg-purple-500/10 blur-[100px] sm:blur-[120px] rounded-full"></div>
+      <div class="absolute top-[60%] -right-32 sm:-right-48 w-64 sm:w-96 h-64 sm:h-96 bg-emerald-500/10 blur-[100px] sm:blur-[120px] rounded-full"></div>
     </div>
 
     <div class="relative z-10 flex flex-col min-h-screen">

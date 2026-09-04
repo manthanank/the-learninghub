@@ -63,16 +63,16 @@ const { category, repos } = Astro.props;
         </div>
       </div>
 
-      <div>
-        <div class="flex items-center gap-3">
-          <h2 class="text-2xl font-bold text-white tracking-tight">
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+          <h2 class="text-xl sm:text-2xl font-bold text-white tracking-tight break-words">
             {category.name}
           </h2>
           <span class="category-count text-xs font-semibold px-2.5 py-0.5 rounded-full bg-white/[0.06] text-slate-300 border border-white/[0.08]">
             {repos.length} Guides
           </span>
         </div>
-        <p class="text-sm text-slate-400 mt-1 max-w-2xl">
+        <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl leading-relaxed">
           {category.description}
         </p>
       </div>
@@ -81,7 +81,7 @@ const { category, repos } = Astro.props;
     <!-- Category Jump Link -->
     <a
       href={`#cat-${category.id}`}
-      class="text-xs text-slate-400 hover:text-cyan-400 font-medium inline-flex items-center gap-1 transition-colors self-start sm:self-auto"
+      class="text-xs text-slate-400 hover:text-cyan-400 font-medium inline-flex items-center gap-1 transition-colors self-start sm:self-auto min-h-[32px] items-center"
     >
       <span>Direct link</span>
       <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -92,7 +92,7 @@ const { category, repos } = Astro.props;
   </div>
 
   <!-- Cards Grid -->
-  <div class="cards-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+  <div class="cards-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
     {repos.map(repo => (
       <RepoCard repo={repo} />
     ))}

@@ -36,8 +36,7 @@ the-learninghub/
 │   │   ├── RepoCard.astro       # Card showing title, description, tags, link
 │   │   └── StatsBanner.astro    # Quick summary (40+ Guides, 6 Domains)
 │   ├── data/
-│   │   ├── categories.ts        # Category ordering & metadata
-│   │   └── repos.json           # Curated metadata (tags, levels, descriptions)
+│   │   └── categories.ts        # Category ordering & metadata
 │   ├── layouts/
 │   │   └── Layout.astro         # Base HTML head, SEO meta tags, and global fonts
 │   ├── pages/
@@ -85,24 +84,12 @@ npm run preview
 
 ## ➕ Adding a New Guide / Repository
 
-To add a new repository to the directory:
+Repositories are **100% dynamically fetched** from GitHub!
 
-1. Add entry to `src/data/repos.json`:
-```json
-{
-  "name": "learn-newtech",
-  "title": "NewTech Fundamentals & Patterns",
-  "description": "Comprehensive guide to NewTech with exercises.",
-  "category": "frontend",
-  "tags": ["NewTech", "JavaScript"],
-  "githubUrl": "https://github.com/manthanank/learn-newtech",
-  "level": "Intermediate",
-  "stars": 0,
-  "forks": 0,
-  "isFeatured": false
-}
-```
-2. The search filter, stats banner, and category section will automatically update!
+To add a new repository to the directory:
+1. Create a repository on GitHub under `@manthanank` starting with `learn-` (e.g., `learn-rust`).
+2. Add relevant GitHub topics (e.g. `rust`, `systems`, `learning`).
+3. Deploy or rebuild—The LearningHub will automatically discover, categorize, tag, and display the guide dynamically!
 
 ---
 
