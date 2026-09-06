@@ -13,16 +13,25 @@ const levelColors = {
   Advanced: 'text-purple-400 bg-purple-950/40 border-purple-500/20'
 };
 
+const statusColors = {
+  Completed: 'text-emerald-300 bg-emerald-950/60 border-emerald-500/30',
+  'In Progress': 'text-amber-300 bg-amber-950/60 border-amber-500/30',
+  Roadmap: 'text-slate-400 bg-slate-900/60 border-slate-700/40'
+};
+
 const categoryLabels: Record<string, string> = {
   frontend: 'Frontend',
   backend: 'Backend',
-  devops: 'DevOps',
+  ai: 'AI & Agents',
+  devops: 'DevOps & Cloud',
   databases: 'Databases',
+  'testing-security': 'Testing & Security',
   languages: 'Languages',
   'system-design': 'System Design'
 };
 
 const levelBadge = repo.level ? levelColors[repo.level] : levelColors.Intermediate;
+const statusBadge = repo.status ? statusColors[repo.status] : statusColors.Completed;
 ---
 
 <div
@@ -32,6 +41,7 @@ const levelBadge = repo.level ? levelColors[repo.level] : levelColors.Intermedia
   data-desc={repo.description.toLowerCase()}
   data-category={repo.category}
   data-level={repo.level || 'Intermediate'}
+  data-status={repo.status || 'Completed'}
   data-tags={repo.tags.join(',').toLowerCase()}
 >
   <!-- Card Header Background Gradient Flare -->
@@ -45,18 +55,24 @@ const levelBadge = repo.level ? levelColors[repo.level] : levelColors.Intermedia
         {categoryLabels[repo.category] || repo.category}
       </span>
 
-      <!-- Difficulty Level & Featured Star -->
-      <div class="flex items-center gap-1.5">
-        {repo.isFeatured && (
-          <span class="flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20" title="Featured Guide">
-            <svg class="w-3 h-3 fill-amber-400 text-amber-400" viewBox="0 0 20 20">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-            </svg>
-            Featured
+      <!-- Status & Difficulty Badge -->
+      <div class="flex items-center gap-1.5 flex-wrap justify-end">
+        {repo.status && (
+          <span class={`flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-md border ${statusBadge}`}>
+            {repo.status === 'Completed' && (
+              <svg class="w-2.5 h-2.5 text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            )}
+            {repo.status === 'In Progress' && (
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+            )}
+            {repo.status}
           </span>
         )}
+
         {repo.level && (
-          <span class={`text-[11px] font-medium px-2 py-0.5 rounded-md border ${levelBadge}`}>
+          <span class={`text-[10px] font-medium px-2 py-0.5 rounded-md border ${levelBadge}`}>
             {repo.level}
           </span>
         )}
@@ -80,6 +96,9 @@ const levelBadge = repo.level ? levelColors[repo.level] : levelColors.Intermedia
         <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-0-5H20"/>
       </svg>
       <span>{repo.name}</span>
+      {repo.guideLines && (
+        <span class="text-slate-500 text-[11px]">• {repo.guideLines.toLocaleString()} lines</span>
+      )}
     </div>
 
     <!-- Description -->
@@ -102,26 +121,21 @@ const levelBadge = repo.level ? levelColors[repo.level] : levelColors.Intermedia
     </div>
   </div>
 
-  <!-- Card Footer -->
+  <!-- Bottom Interactive CTA Bar -->
   <div class="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-slate-400 relative z-10">
     <div class="flex items-center gap-3">
       {repo.stars !== undefined && repo.stars > 0 && (
-        <span class="flex items-center gap-1 text-slate-300 font-mono">
-          <svg class="w-3.5 h-3.5 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
+        <span class="flex items-center gap-1 hover:text-amber-400 transition-colors" title="GitHub Stars">
+          <svg class="w-3.5 h-3.5 fill-amber-400 text-amber-400" viewBox="0 0 20 20">
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
           </svg>
           {repo.stars}
         </span>
       )}
-      {repo.forks !== undefined && repo.forks > 0 && (
-        <span class="flex items-center gap-1 font-mono">
-          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="6" y1="3" x2="6" y2="15"></line>
-            <circle cx="18" cy="6" r="3"></circle>
-            <circle cx="6" cy="18" r="3"></circle>
-            <path d="M18 9a9 9 0 0 1-9 9"></path>
-          </svg>
-          {repo.forks}
+      {repo.language && (
+        <span class="flex items-center gap-1">
+          <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+          {repo.language}
         </span>
       )}
     </div>
@@ -130,12 +144,11 @@ const levelBadge = repo.level ? levelColors[repo.level] : levelColors.Intermedia
       href={repo.githubUrl}
       target="_blank"
       rel="noopener noreferrer"
-      class="inline-flex items-center gap-1 text-xs font-semibold text-cyan-400 hover:text-cyan-300 group-hover:translate-x-0.5 transition-all duration-200"
+      class="inline-flex items-center gap-1 text-cyan-400 hover:text-cyan-300 font-semibold transition-colors"
     >
-      <span>Explore Guide</span>
-      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="5" y1="12" x2="19" y2="12"></line>
-        <polyline points="12 5 19 12 12 19"></polyline>
+      <span>Open Guide</span>
+      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
       </svg>
     </a>
   </div>

@@ -13,16 +13,25 @@ export const categories: CategoryMeta[] = [
   {
     id: 'backend',
     name: 'Backend, APIs & Runtimes',
-    description: 'High-throughput server architectures, modern JS/TS runtimes, NestJS enterprise design, and API paradigms.',
+    description: 'High-throughput server architectures, modern JS/TS runtimes, Express 5, NestJS, and distributed API paradigms.',
     icon: 'server',
     badgeColor: 'text-emerald-400 bg-emerald-950/50 border-emerald-500/30',
     gradient: 'from-emerald-500 via-teal-500 to-green-600',
     borderHover: 'hover:border-emerald-500/40 hover:shadow-emerald-500/10'
   },
   {
+    id: 'ai',
+    name: 'AI, LLMs & Autonomous Agents',
+    description: 'Large language models, prompt engineering, RAG, vector databases, LangGraph cyclic state machines, and local inference.',
+    icon: 'cpu',
+    badgeColor: 'text-fuchsia-400 bg-fuchsia-950/50 border-fuchsia-500/30',
+    gradient: 'from-fuchsia-500 via-purple-500 to-pink-600',
+    borderHover: 'hover:border-fuchsia-500/40 hover:shadow-fuchsia-500/10'
+  },
+  {
     id: 'devops',
     name: 'DevOps, Cloud & Infrastructure',
-    description: 'Containerization, Kubernetes orchestration, Git workflows, CI/CD pipelines, and Linux sysadmin.',
+    description: 'Containerization, Kubernetes orchestration, Git workflows, CI/CD pipelines, AWS cloud, and Linux sysadmin.',
     icon: 'cloud',
     badgeColor: 'text-violet-400 bg-violet-950/50 border-violet-500/30',
     gradient: 'from-violet-500 via-purple-500 to-indigo-600',
@@ -38,9 +47,18 @@ export const categories: CategoryMeta[] = [
     borderHover: 'hover:border-amber-500/40 hover:shadow-amber-500/10'
   },
   {
+    id: 'testing-security',
+    name: 'Testing, Protocols & Web Security',
+    description: 'End-to-end testing with Playwright, Vitest unit testing, WebSockets, gRPC protocols, and OWASP web security defense.',
+    icon: 'code',
+    badgeColor: 'text-rose-400 bg-rose-950/50 border-rose-500/30',
+    gradient: 'from-rose-500 via-red-500 to-amber-600',
+    borderHover: 'hover:border-rose-500/40 hover:shadow-rose-500/10'
+  },
+  {
     id: 'languages',
     name: 'Programming Languages',
-    description: 'Core syntax, typing systems, memory models, and idiomatic idioms in TypeScript, Python, Go, and C/C++.',
+    description: 'Core syntax, typing systems, memory models, and idiomatic idioms in TypeScript, Python, Rust, Go, and C/C++.',
     icon: 'code',
     badgeColor: 'text-pink-400 bg-pink-950/50 border-pink-500/30',
     gradient: 'from-pink-500 via-rose-500 to-red-600',

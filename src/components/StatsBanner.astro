@@ -1,44 +1,42 @@
 ---
 interface Props {
   totalGuides: number;
+  completedCount?: number;
   totalCategories: number;
   totalTechnologies: number;
 }
 
 const {
-  totalGuides = 42,
-  totalCategories = 6,
-  totalTechnologies = 50
+  totalGuides = 62,
+  completedCount = 14,
+  totalCategories = 8,
+  totalTechnologies = 65
 } = Astro.props;
 
 const stats = [
   {
     label: 'Curated Guides',
-    value: `${totalGuides}+`,
+    value: `${totalGuides}`,
     sub: 'Full-stack & systems',
-    gradient: 'from-cyan-400 to-blue-500',
-    icon: 'book'
+    gradient: 'from-cyan-400 to-blue-500'
+  },
+  {
+    label: 'Live Masterclasses',
+    value: `${completedCount}`,
+    sub: 'Exhaustive 7-stage guides',
+    gradient: 'from-emerald-400 to-teal-500'
   },
   {
     label: 'Tech Domains',
     value: `${totalCategories}`,
-    sub: 'Frontend to DevOps',
-    gradient: 'from-purple-400 to-indigo-500',
-    icon: 'layers'
-  },
-  {
-    label: 'Tags & Concepts',
-    value: `${totalTechnologies}+`,
-    sub: 'Modern frameworks & tools',
-    gradient: 'from-emerald-400 to-teal-500',
-    icon: 'tag'
+    sub: 'Frontend, AI to DevOps',
+    gradient: 'from-purple-400 to-indigo-500'
   },
   {
     label: 'Open Source',
     value: '100%',
-    sub: 'Free on GitHub',
-    gradient: 'from-amber-400 to-orange-500',
-    icon: 'code'
+    sub: 'MIT License on GitHub',
+    gradient: 'from-amber-400 to-orange-500'
   }
 ];
 ---

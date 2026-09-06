@@ -13,8 +13,8 @@ const stats = getStats(repos);
 ---
 
 <Layout
-  title="The LearningHub | 40+ Developer Guides & Tech Stacks"
-  description="Explore 40+ curated developer repositories, guides, and roadmaps covering Frontend, Backend, DevOps, Databases, Languages, and System Design."
+  title="The LearningHub | 60+ Developer Guides & Masterclasses"
+  description="Explore 60+ curated developer repositories, masterclasses, and roadmaps covering Frontend, Backend, AI & Agents, DevOps, Databases, Security, and System Design."
   repos={repos}
 >
   <Navbar totalGuides={stats.totalGuides} />
@@ -28,7 +28,7 @@ const stats = getStats(repos);
           <span class="flex h-2 w-2 rounded-full bg-cyan-400 flex-shrink-0 animate-pulse"></span>
           <span class="truncate">Open Source Developer Ecosystem</span>
           <span class="text-slate-500">•</span>
-          <span class="text-slate-300 whitespace-nowrap">{stats.totalGuides} Repos</span>
+          <span class="text-slate-300 whitespace-nowrap">{stats.totalGuides} Guides ({stats.completedCount} Complete)</span>
         </div>
 
         <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight">
@@ -36,13 +36,13 @@ const stats = getStats(repos);
         </h1>
 
         <p class="mt-3 sm:mt-6 text-sm sm:text-lg md:text-xl text-slate-300/90 max-w-2xl mx-auto leading-relaxed px-2">
-          A centralized directory of curated developer guides, code patterns, and practical roadmaps—from frontend frameworks to distributed system architectures.
+          A centralized ecosystem of exhaustive developer masterclasses, architectural blueprints, and practical roadmaps—from frontend frameworks to autonomous AI agents and distributed systems.
         </p>
 
         <!-- Quick Technology Tags Bar -->
         <div class="mt-5 sm:mt-6 flex flex-wrap justify-center items-center gap-1.5 sm:gap-2 text-xs text-slate-400">
-          <span class="text-slate-500 hidden sm:inline">Popular:</span>
-          {['React', 'Angular', 'Next.js', 'TypeScript', 'Node.js', 'Docker', 'Postgres', 'Python', 'Go', 'System Design'].map(tech => (
+          <span class="text-slate-500 hidden sm:inline">Featured:</span>
+          {['React 19', 'Next.js 15', 'Angular', 'TypeScript', 'Node.js', 'Python', 'Docker', 'OpenAI', 'LangGraph', 'Postgres', 'Kafka', 'System Design'].map(tech => (
             <span class="px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/[0.06] text-slate-300 font-mono text-[11px]">
               {tech}
             </span>
@@ -54,6 +54,7 @@ const stats = getStats(repos);
     <!-- Stats Banner -->
     <StatsBanner
       totalGuides={stats.totalGuides}
+      completedCount={stats.completedCount}
       totalCategories={stats.categoriesCount}
       totalTechnologies={stats.technologiesCount}
     />
