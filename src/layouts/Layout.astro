@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import type { LearningRepo } from '../types/repo';
+import Analytics from '@vercel/analytics/astro';
 
 interface Props {
   title?: string;
@@ -144,5 +145,6 @@ const collectionSchema = {
     <div class="relative z-10 flex flex-col min-h-screen">
       <slot />
     </div>
+    <Analytics />
   </body>
 </html>
